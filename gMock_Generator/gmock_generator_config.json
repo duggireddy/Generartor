@@ -1,0 +1,6 @@
+{
+  "gmock_srcs": "C:/HCP2_IDC/INT_FDC/swc/src/ASMH",  
+  "gmock_swc_func_proto_src":"C:/Users/duggireddy/Desktop/HEADER",
+  "gmock_jinja_template": "C:/HCP2_IDC/INT_FDC/swc/tools/Common/gMock_Generator/Jinja2_Templates",
+  "gmock_output":"C:/HCP2_IDC/Mock_Methods"
+}

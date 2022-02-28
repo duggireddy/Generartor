@@ -1,0 +1,6 @@
+{
+  "gtest_srcs": "C:/HCP2_IDC/INT_FDC/swc/src/ASMH",  
+  "gtest_swc_func_proto_src":"C:/Users/duggireddy/Desktop/HEADER",
+  "gtest_jinja_template": "C:/HCP2_IDC/INT_FDC/swc/tools/Common/gtest_Generator/Jinja2_Templates",
+  "gtest_output":"C:/HCP2_IDC/G_Test"
+}

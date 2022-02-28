@@ -1,0 +1,23 @@
+
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
+
+using ::testing::Return;  
+
+{# ################################################}
+{#      THIS IS USED TO GENERATE  MOCK METHODS  #
+################################################ #}
+class Mock_Rte_CtCdIDC 
+{
+public:
+	virtual ~Mock_Rte_CtCdIDC() = default; 
+{% for i in range(RTN| length) %}
+	MOCK_METHOD({{RTN[i]}}, {{RTE[i]}}_VALUE,());{% endfor %}{% for i in range(ARG_FUNC| length) %}
+	{# HERE WE USE _VALUE AS STATIC JUST FOR NAMING CONVENCTION TO THE MOCKS #}
+	MOCK_METHOD({{DT[i]}}, {{ARG_FUNC[i]}}_{{ARG_RTE[i]}},());
+{% endfor %}
+
+}
+
+
+

@@ -1,0 +1,50 @@
+
+
+#include <thread>
+extern "C" 
+{
+  #include "CtApIDC_ASM.h"
+
+}
+
+#include "Rte_CtCdIDC_Mock_Class.h"
+
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
+
+using ::testing::Return;
+
+
+const Dt_RECORD_Timestamp timestamp = {0,58334323};
+float32 asm_time;
+
+{% for i in range(1,2) %}    {#THIS IS USED TO GENERATE THE TESTCASES #}
+{%for Function in fun_list %}  
+{% set loop_test = loop.index0 %} {# HERE WE ARE STORING THE FUNCTION INDEX WHICH IS ACCESSED BY THE OTHER LISTS WRT TO THAT FUNCTION  #}
+
+TEST(Maintest, {{Function_Name[loop_test]}}{{i}}) {
+  create_Mock_Rte_CtCdIDC();
+  {%for Arg_ptr in Call_Arg[loop_test] %}{% if Arg_ptr != Null  %}{#THIS FOR ARGUMENTS #}
+  {{Arg_ptr}}   {% endif %}  {% endfor %}
+  {%for Data_Types_list in Data_Types[loop.index0] %}{% if Data_Types_list != 'N_DT_IN_FILE_CALL'  %}{% if Data_Types_list != 'void'  %} {#THIS IS TO GENERATE DATA TYPES WRT TO CALLS  #}
+  {% if 'EthDAFIn' in Data_Types_list   %}{{Data_Types_list}} EthDAFInn;  {% elif 'EthASMIn' in Data_Types_list   %}{{Data_Types_list}} TestASM; {% else %}{{Data_Types_list}} ReturnValueIStatus; {% endif %} {% endif %}{% endif %}{% endfor %}
+  //////// WRITE THE TEST VALUES HERE ///////
+  {#THIS IS TO GENERATE EXPECT_CALL WRT TO CALLS  #}
+  {% set loop_Elem = pt[loop_test] %} {%for EXPECT_CALL in Rte_list[loop_test] %}{% set loop_Ele = loop.index0 %}  {% if EXPECT_CALL != "THEIR IS NO RTE CALLS INSIDE THE FUNCTION"  %}
+  EXPECT_CALL(*pMock_Rte_CtCdIDC,{{EXPECT_CALL}}_VALUE).WillRepeatedly(Return({% if 'DeEthDAF' in EXPECT_CALL   %}{% if loop_Elem[loop_Ele] == '&' %}{{loop_Elem[loop_Ele]}}EthDAFInn)); {% else %}EthDAFInn));  {% endif %}{% elif 'DeEthASM' in EXPECT_CALL   %}{% if loop_Elem[loop_Ele] == '&' %}{{loop_Elem[loop_Ele]}}TestASM));{% else %}TestASM));{% endif %} {% else %}{% if loop_Elem[loop_Ele] == '&' %}{{loop_Elem[loop_Ele]}}ReturnValueIStatus));{%else%}ReturnValueIStatus)); {% endif %}{% endif %}
+     {% endif %}{% endfor %}
+ {%for Arg_ptr in Call_Arg_Ptr[loop_test] %}{% if Arg_ptr != Null  %}{#THIS IS TO GENERATE EXPECT_CALL WRT TO CALLS ARGUMENTS  #}
+
+ {% set loop_test_Arg = loop.index %}
+  EXPECT_CALL(*pMock_Rte_CtCdIDC,{{Arg_ptr}}).WillRepeatedly(Return(&{%for Arg_Var in Arg_Var[loop_test]%}{%if loop_test_Arg == loop.index %}{{Arg_Var}}{% endif %}{% endfor %});{% endif %}  {% endfor %}
+
+  {{Function}}; {# HERE WE ARE CALLING FUNCTION #}
+  EXPECT_EQ(); 
+  destroy_Mock_Rte_CtCdIDC();
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+{% endfor %}
+{% endfor %}
+
+
+

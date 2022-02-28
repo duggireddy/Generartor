@@ -1,0 +1,17 @@
+
+{# 
+################################################
+#                                              #                                                                                      
+#      THIS IS USED TO GENERATE  MOCK RTE      #
+#                                              #                                                                                      
+################################################ #}
+
+{% for i in range(RTN| length) %}
+{{Rte_Mock[i]}}{
+	{% for Read_Rte_Mock_Arg in Rte_Mock_Arg[i] %}{% if '*' in Read_Rte_Mock_Arg %}  {#IF THE CALL HAVE TO RETURN ANY DATA THEN IT WILL PRINT THE DATA ACCORDING TO THE ARGUMENTS  (*data = *pMock_Rte_CtCdIDC->Rte_Read_PpCodingDataPH_SWC_DeCodingData_DATA();)  #}
+	{{Read_Rte_Mock_Arg}} = *pMock_Rte_CtCdIDC->{{RTE[i]}}_{{Read_Rte_Mock_Arg[1: ] |upper() }}();{% endif %}	
+	{% endfor %}
+ 	return pMock_Rte_CtCdIDC->{{RTE[i]}}_VALUE;
+};
+{% endfor %}
+
